@@ -1026,22 +1026,26 @@ const POKEMON = [
   {id:1022,name:{en:'Iron Boulder',de:'Eisenfels'},types:['rock','psychic'],gen:9,dex:{kanto:null,galar:null,armor:null,crown:null,hisui:null,sinnoh:null,paldea:null,kitakami:null,blueberry:239,go:true}},
   {id:1023,name:{en:'Iron Crown',de:'Eisenhaupt'},types:['steel','psychic'],gen:9,dex:{kanto:null,galar:null,armor:null,crown:null,hisui:null,sinnoh:null,paldea:null,kitakami:null,blueberry:238,go:true}},
   {id:1024,name:{en:'Terapagos',de:'Terapagos'},types:['normal'],gen:9,dex:{kanto:null,galar:null,armor:null,crown:null,hisui:null,sinnoh:null,paldea:null,kitakami:null,blueberry:240,go:true}},
-  {id:1025,name:{en:'Pecharunt',de:'Infamomo'},types:['poison','ghost'],gen:9,dex:{kanto:null,galar:null,armor:null,crown:null,hisui:null,sinnoh:null,paldea:null,kitakami:null,blueberry:243,go:true}}
+  {id:1025,name:{en:'Pecharunt',de:'Infamomo'},types:['poison','ghost'],gen:9,dex:{kanto:null,galar:null,armor:null,crown:null,hisui:null,sinnoh:null,paldea:null,kitakami:null,blueberry:243,go:false}}
 ];
 
 // Dex definitions
+// filter = which Pokemon appear in the dex view (regional only, matching Home)
+// total = regional dex size as shown in Pokemon Home
+// Note: Pokemon beyond the regional limit are still obtainable in that game
+//       and can be checked as source — they just don't count for regional completion.
 const DEXES = {
   all:       { nameKey: 'dexAll',       icon: '📋', gameKey: null,   total: 1025, filter: () => true },
   national:  { nameKey: 'dexNational',  icon: '🌍', gameKey: null,   total: 999,  filter: p => p.id <= 999 },
-  kanto:     { nameKey: 'dexKanto',     icon: '🔴', gameKey: 'lgpe', total: 153,  filter: p => p.dex.kanto !== null },
-  sinnoh:    { nameKey: 'dexSinnoh',    icon: '💎', gameKey: 'bdsp', total: 210,  filter: p => p.dex.sinnoh !== null },
+  kanto:     { nameKey: 'dexKanto',     icon: '🔴', gameKey: 'lgpe', total: 150,  filter: p => p.dex.kanto !== null && p.dex.kanto <= 150 },
+  sinnoh:    { nameKey: 'dexSinnoh',    icon: '💎', gameKey: 'bdsp', total: 150,  filter: p => p.dex.sinnoh !== null && p.dex.sinnoh <= 150 },
   galar:     { nameKey: 'dexGalar',     icon: '⚔️', gameKey: 'swsh', total: 400,  filter: p => p.dex.galar !== null },
-  armor:     { nameKey: 'dexArmor',     icon: '🛡️', gameKey: 'swsh', total: 211,  filter: p => p.dex.armor !== null },
+  armor:     { nameKey: 'dexArmor',     icon: '🛡️', gameKey: 'swsh', total: 210,  filter: p => p.dex.armor !== null && p.dex.armor <= 210 },
   crown:     { nameKey: 'dexCrown',     icon: '👑', gameKey: 'swsh', total: 210,  filter: p => p.dex.crown !== null },
   hisui:     { nameKey: 'dexHisui',     icon: '⛰️', gameKey: 'pla',  total: 242,  filter: p => p.dex.hisui !== null },
   paldea:    { nameKey: 'dexPaldea',    icon: '🟣', gameKey: 'sv',   total: 400,  filter: p => p.dex.paldea !== null },
   kitakami:  { nameKey: 'dexKitakami',  icon: '🎭', gameKey: 'sv',   total: 200,  filter: p => p.dex.kitakami !== null },
-  blueberry: { nameKey: 'dexBlueberry', icon: '🫐', gameKey: 'sv',   total: 243,  filter: p => p.dex.blueberry !== null },
+  blueberry: { nameKey: 'dexBlueberry', icon: '🫐', gameKey: 'sv',   total: 240,  filter: p => p.dex.blueberry !== null && p.dex.blueberry <= 240 },
   go:        { nameKey: 'dexGo',        icon: '📱', gameKey: 'go',   total: 1024, filter: p => p.dex.go === true },
 };
 
