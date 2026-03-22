@@ -127,6 +127,8 @@ body {
   font-weight: 600; font-family: var(--cc-font); transition: all var(--cc-transition);
 }
 .cc-btn:hover { background: var(--cc-surface-hover); border-color: var(--cc-primary-light); }
+.cc-btn.primary { background: var(--cc-primary); color: white; border-color: var(--cc-primary); }
+.cc-btn.primary:hover { background: var(--cc-primary-dark); }
 .cc-btn.danger:hover { border-color: var(--cc-danger); color: var(--cc-danger); }
 
 /* ===== Dex View ===== */
@@ -248,6 +250,36 @@ body {
 }
 
 [data-theme="dark"] .obtain-info { color: var(--cc-text-secondary); }
+
+/* ===== Guides ===== */
+.guides-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
+
+.guide-card {
+  background: var(--cc-surface); border: 1px solid var(--cc-border); border-radius: var(--cc-radius);
+  margin-bottom: 12px; box-shadow: var(--cc-shadow); overflow: hidden;
+}
+.guide-card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; cursor: pointer; font-weight: 700; font-size: 1.05rem;
+  transition: background var(--cc-transition); user-select: none;
+}
+.guide-card-header:hover { background: var(--cc-surface-hover); }
+.guide-toggle-icon { font-size: 1rem; color: var(--cc-text-secondary); transition: transform var(--cc-transition); }
+.guide-card.open .guide-toggle-icon { transform: rotate(180deg); }
+.guide-card-body { display: none; padding: 0 20px 16px; border-top: 1px solid var(--cc-border); }
+.guide-card.open .guide-card-body { display: block; }
+
+.guide-section { margin-top: 14px; }
+.guide-section h3 { font-size: 0.95rem; font-weight: 700; color: var(--cc-primary); margin-bottom: 8px; }
+.guide-section ul { list-style: none; }
+.guide-section li {
+  padding: 6px 0 6px 20px; position: relative; font-size: 0.9rem; line-height: 1.5;
+  border-bottom: 1px solid var(--cc-border); color: var(--cc-text);
+}
+.guide-section li:last-child { border-bottom: none; }
+.guide-section li::before {
+  content: '•'; position: absolute; left: 4px; color: var(--cc-primary); font-weight: 700;
+}
 
 /* ===== Footer ===== */
 .cc-footer { text-align: center; padding: 24px 20px; color: var(--cc-text-secondary); font-size: 0.8rem; border-top: 1px solid var(--cc-border); margin-top: 40px; }

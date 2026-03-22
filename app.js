@@ -185,6 +185,8 @@ function render() {
     app.innerHTML = renderDashboard();
   } else if (currentView === 'dex') {
     app.innerHTML = renderDexView();
+  } else if (currentView === 'guides') {
+    app.innerHTML = renderGuides();
   }
 
   applyTheme();
@@ -227,6 +229,7 @@ function renderDashboard() {
     </section>
     <section class="dash-grid">${dexCards}</section>
     <section class="dash-actions">
+      <button class="cc-btn primary" onclick="navigate('guides')">📚 ${t('navGuides')}</button>
       <button class="cc-btn" onclick="exportData()">📥 ${t('exportBtn')}</button>
       <button class="cc-btn" onclick="document.getElementById('import-file').click()">📤 ${t('importBtn')}</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
@@ -471,6 +474,42 @@ function openDetail(pokeId) {
 function closeDetail() {
   const modal = document.getElementById('detail-modal');
   if (modal) modal.style.display = 'none';
+}
+
+// ===== Guides View =====
+function renderGuides() {
+  let content = `
+    <div class="dex-header">
+      <button class="back-btn" onclick="navigate('dashboard')">← ${t('navDashboard')}</button>
+    </div>
+    <h1 class="guides-title">📚 ${t('navGuides')}</h1>`;
+
+  for (const [gameKey, guide] of Object.entries(GUIDES)) {
+    const title = guide.title[currentLang] || guide.title.en;
+    let sections = '';
+    for (const section of guide.sections) {
+      const sTitle = section.title[currentLang] || section.title.en;
+      const items = section.items.map(item => {
+        const text = item[currentLang] || item.en;
+        return `<li>${text}</li>`;
+      }).join('');
+      sections += `
+        <div class="guide-section">
+          <h3>${sTitle}</h3>
+          <ul>${items}</ul>
+        </div>`;
+    }
+    content += `
+      <div class="guide-card">
+        <div class="guide-card-header" onclick="this.parentElement.classList.toggle('open')">
+          <span>${guide.icon} ${title}</span>
+          <span class="guide-toggle-icon">▼</span>
+        </div>
+        <div class="guide-card-body">${sections}</div>
+      </div>`;
+  }
+
+  return content;
 }
 
 // ===== Export/Import =====
