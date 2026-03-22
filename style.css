@@ -132,12 +132,20 @@ body {
 .cc-btn.danger:hover { border-color: var(--cc-danger); color: var(--cc-danger); }
 
 /* ===== Dex View ===== */
-.dex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.dex-sticky-top {
+  position: sticky; top: 60px; z-index: 50;
+  background: var(--cc-bg); padding-bottom: 8px;
+  margin: -28px -20px 0; padding: 12px 20px 8px;
+  border-bottom: 1px solid var(--cc-border);
+  box-shadow: var(--cc-shadow);
+}
+
+.dex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .back-btn { background: none; border: none; color: var(--cc-primary); cursor: pointer; font-size: 0.95rem; font-weight: 600; font-family: var(--cc-font); padding: 4px 0; }
 .back-btn:hover { text-decoration: underline; }
 .dex-progress { font-size: 1.1rem; font-weight: 700; color: var(--cc-primary); }
 
-.dex-tabs-scroll { overflow-x: auto; margin-bottom: 16px; -webkit-overflow-scrolling: touch; }
+.dex-tabs-scroll { overflow-x: auto; margin-bottom: 8px; -webkit-overflow-scrolling: touch; }
 .dex-tabs { display: flex; gap: 6px; padding-bottom: 4px; min-width: max-content; }
 .dex-tab {
   background: var(--cc-surface); border: 1px solid var(--cc-border); border-radius: var(--cc-radius-sm);
@@ -147,7 +155,15 @@ body {
 .dex-tab:hover { background: var(--cc-surface-hover); }
 .dex-tab.active { background: var(--cc-primary); color: white; border-color: var(--cc-primary); }
 
-.dex-controls { background: var(--cc-surface); border-radius: var(--cc-radius); padding: 14px; margin-bottom: 16px; border: 1px solid var(--cc-border); box-shadow: var(--cc-shadow); }
+.dex-controls { background: var(--cc-surface); border-radius: var(--cc-radius); padding: 10px 14px; border: 1px solid var(--cc-border); }
+
+.dex-bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: var(--cc-surface); border-top: 1px solid var(--cc-border);
+  padding: 10px 20px; display: flex; gap: 10px; justify-content: center;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] .dex-bottom-bar { box-shadow: 0 -2px 8px rgba(0,0,0,0.3); }
 
 .search-input {
   width: 100%; padding: 10px 14px; border: 1px solid var(--cc-border); border-radius: var(--cc-radius-sm);
@@ -171,8 +187,8 @@ body {
 .sort-btn.active, .view-btn.active { background: var(--cc-primary); color: white; border-color: var(--cc-primary); }
 
 /* ===== Pokemon Grid ===== */
-.poke-grid.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-.poke-grid.list { display: flex; flex-direction: column; gap: 4px; }
+.poke-grid.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding-bottom: 60px; }
+.poke-grid.list { display: flex; flex-direction: column; gap: 4px; padding-bottom: 60px; }
 
 .poke-card {
   background: var(--cc-surface); border: 1px solid var(--cc-border); border-radius: var(--cc-radius-sm);
@@ -297,6 +313,8 @@ body {
   .dash-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
   .poke-grid.grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
   .dex-filters { gap: 4px; }
+  .dex-sticky-top { margin: -16px -10px 0; padding: 8px 10px 6px; }
+  .dex-bottom-bar { padding: 8px 10px; }
   .dash-actions { flex-direction: column; align-items: stretch; }
   .modal-content { padding: 20px; }
 }

@@ -360,28 +360,35 @@ function renderDexView() {
   }).join('');
 
   return `
-    <div class="dex-header">
-      <button class="back-btn" onclick="navigate('dashboard')">← ${t('navDashboard')}</button>
-      <div class="dex-progress">${count.caught} / ${count.total}</div>
-    </div>
-    <div class="dex-tabs-scroll"><div class="dex-tabs">${dexTabs}</div></div>
-    <div class="dex-controls">
-      <input type="text" class="search-input" placeholder="${t('searchPlaceholder')}" value="${searchQuery}" oninput="updateSearch(this.value)">
-      <div class="dex-filters">
-        <select class="filter-select" onchange="updateFilterStatus(this.value)">
-          <option value="all" ${filterStatus === 'all' ? 'selected' : ''}>${t('filterAll')}</option>
-          <option value="caught" ${filterStatus === 'caught' ? 'selected' : ''}>${t('filterCaught')}</option>
-          <option value="missing" ${filterStatus === 'missing' ? 'selected' : ''}>${t('filterMissing')}</option>
-        </select>
-        <select class="filter-select" onchange="updateFilterType(this.value)">${typeOptions}</select>
-        <select class="filter-select" onchange="updateFilterGen(this.value)">${genOptions}</select>
-        <button class="sort-btn ${sortBy === 'dexnum' ? 'active' : ''}" onclick="updateSort('dexnum')">${t('sortDexNum')}</button>
-        <button class="sort-btn ${sortBy === 'name' ? 'active' : ''}" onclick="updateSort('name')">${t('sortName')}</button>
-        <button class="view-btn ${viewMode === 'grid' ? 'active' : ''}" onclick="updateView('grid')">${t('viewGrid')}</button>
-        <button class="view-btn ${viewMode === 'list' ? 'active' : ''}" onclick="updateView('list')">${t('viewList')}</button>
+    <div class="dex-sticky-top">
+      <div class="dex-header">
+        <button class="back-btn" onclick="navigate('dashboard')">← ${t('navDashboard')}</button>
+        <div class="dex-progress">${count.caught} / ${count.total}</div>
+      </div>
+      <div class="dex-tabs-scroll"><div class="dex-tabs">${dexTabs}</div></div>
+      <div class="dex-controls">
+        <input type="text" class="search-input" placeholder="${t('searchPlaceholder')}" value="${searchQuery}" oninput="updateSearch(this.value)">
+        <div class="dex-filters">
+          <select class="filter-select" onchange="updateFilterStatus(this.value)">
+            <option value="all" ${filterStatus === 'all' ? 'selected' : ''}>${t('filterAll')}</option>
+            <option value="caught" ${filterStatus === 'caught' ? 'selected' : ''}>${t('filterCaught')}</option>
+            <option value="missing" ${filterStatus === 'missing' ? 'selected' : ''}>${t('filterMissing')}</option>
+          </select>
+          <select class="filter-select" onchange="updateFilterType(this.value)">${typeOptions}</select>
+          <select class="filter-select" onchange="updateFilterGen(this.value)">${genOptions}</select>
+          <button class="sort-btn ${sortBy === 'dexnum' ? 'active' : ''}" onclick="updateSort('dexnum')">${t('sortDexNum')}</button>
+          <button class="sort-btn ${sortBy === 'name' ? 'active' : ''}" onclick="updateSort('name')">${t('sortName')}</button>
+          <button class="view-btn ${viewMode === 'grid' ? 'active' : ''}" onclick="updateView('grid')">${t('viewGrid')}</button>
+          <button class="view-btn ${viewMode === 'list' ? 'active' : ''}" onclick="updateView('list')">${t('viewList')}</button>
+        </div>
       </div>
     </div>
     <div class="poke-grid ${viewMode}">${cards || '<div class="empty-state">No Pokémon found.</div>'}</div>
+    <div class="dex-bottom-bar">
+      <button class="cc-btn" onclick="exportData()">📥 ${t('exportBtn')}</button>
+      <button class="cc-btn" onclick="document.getElementById('import-file-dex').click()">📤 ${t('importBtn')}</button>
+      <input type="file" id="import-file-dex" accept=".json" style="display:none" onchange="importData(this)">
+    </div>
     <div id="detail-modal" class="modal" style="display:none"></div>`;
 }
 
