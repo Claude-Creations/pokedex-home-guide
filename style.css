@@ -156,12 +156,12 @@ body {
 .dex-controls { background: var(--cc-surface); border-radius: var(--cc-radius); padding: 10px 14px; border: 1px solid var(--cc-border); }
 
 .dex-bottom-bar {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  background: var(--cc-surface); border-top: 1px solid var(--cc-border);
-  padding: 10px 20px; display: flex; gap: 10px; justify-content: center;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 50;
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  padding: 8px 16px; display: flex; gap: 8px;
+  border-radius: var(--cc-radius); box-shadow: var(--cc-shadow-lg);
+  width: auto;
 }
-[data-theme="dark"] .dex-bottom-bar { box-shadow: 0 -2px 8px rgba(0,0,0,0.3); }
 
 .search-input {
   width: 100%; padding: 10px 14px; border: 1px solid var(--cc-border); border-radius: var(--cc-radius-sm);
@@ -312,7 +312,7 @@ body {
   .poke-grid.grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
   .dex-filters { gap: 4px; }
   .dex-sticky-top { margin: -16px -10px 0; padding: 8px 10px 6px; }
-  .dex-bottom-bar { padding: 8px 10px; }
+  .dex-bottom-bar { bottom: 12px; padding: 6px 12px; }
   .dash-actions { flex-direction: column; align-items: stretch; }
   .modal-content { padding: 20px; }
 }
