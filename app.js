@@ -242,60 +242,6 @@ function renderDexView() {
   const dex = DEXES[currentDex];
   if (!dex) return '';
 
-  let pokemon = POKEMON.filter(dex.filter);
-
-  // Search
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    pokemon = pokemon.filter(p =>
-      p.name.en.toLowerCase().includes(q) ||
-      p.name.de.toLowerCase().includes(q) ||
-      String(p.id).includes(q)
-    );
-  }
-
-  // Filter by status
-  if (filterStatus === 'caught') {
-    if (currentDex === 'national' || currentDex === 'all') {
-      pokemon = pokemon.filter(p => isNationalChecked(p.id));
-    } else if (currentDex === 'go') {
-      pokemon = pokemon.filter(p => isChecked(p.id, 'go'));
-    } else {
-      pokemon = pokemon.filter(p => dex.gameKey && isChecked(p.id, dex.gameKey));
-    }
-  } else if (filterStatus === 'missing') {
-    if (currentDex === 'national' || currentDex === 'all') {
-      pokemon = pokemon.filter(p => !isNationalChecked(p.id));
-    } else if (currentDex === 'go') {
-      pokemon = pokemon.filter(p => !isChecked(p.id, 'go'));
-    } else {
-      pokemon = pokemon.filter(p => !(dex.gameKey && isChecked(p.id, dex.gameKey)));
-    }
-  }
-
-  // Filter by type
-  if (filterType) {
-    pokemon = pokemon.filter(p => p.types.includes(filterType));
-  }
-
-  // Filter by generation
-  if (filterGen) {
-    pokemon = pokemon.filter(p => p.gen === parseInt(filterGen));
-  }
-
-  // Sort
-  if (sortBy === 'name') {
-    pokemon.sort((a, b) => pokeName(a).localeCompare(pokeName(b)));
-  } else {
-    // Sort by dex number (regional if available, else national)
-    const dexKey = currentDex === 'national' || currentDex === 'go' ? null : currentDex;
-    pokemon.sort((a, b) => {
-      const aNum = dexKey && a.dex[dexKey] ? a.dex[dexKey] : a.id;
-      const bNum = dexKey && b.dex[dexKey] ? b.dex[dexKey] : b.id;
-      return aNum - bNum;
-    });
-  }
-
   // Dex tabs
   let dexTabs = '';
   for (const [key, d] of Object.entries(DEXES)) {
@@ -316,48 +262,7 @@ function renderDexView() {
   }
 
   // Count
-  const totalFiltered = POKEMON.filter(dex.filter).length;
   const count = countDex(currentDex);
-
-  // Pokemon cards
-  const dexKey = (currentDex === 'national' || currentDex === 'go' || currentDex === 'all') ? null : currentDex;
-  const cards = pokemon.map(p => {
-    const displayNum = dexKey && p.dex[dexKey] ? p.dex[dexKey] : p.id;
-    const typesBadges = p.types.map(type =>
-      `<span class="type-badge" style="background:${TYPE_COLORS[type]}">${typeName(type)}</span>`
-    ).join('');
-
-    // Caught status depends on view
-    let cardClass = '';
-    let checkMark = '';
-    if (currentDex === 'all') {
-      // "All" view: 3 states — not caught, partially caught (some dexes), fully caught (all dexes)
-      const dexStatus = getDexCaughtCount(p.id);
-      const natChecked = isNationalChecked(p.id);
-      if (dexStatus.total > 0 && dexStatus.count >= dexStatus.total) {
-        cardClass = 'caught-full';
-        checkMark = '✓✓';
-      } else if (natChecked || dexStatus.count > 0) {
-        cardClass = 'caught-partial';
-        checkMark = '✓';
-      }
-    } else if (currentDex === 'national') {
-      if (isNationalChecked(p.id)) { cardClass = 'caught'; checkMark = '✓'; }
-    } else if (currentDex === 'go') {
-      if (isChecked(p.id, 'go')) { cardClass = 'caught'; checkMark = '✓'; }
-    } else {
-      // Regional dex: caught in THIS specific game only
-      if (dex.gameKey && isChecked(p.id, dex.gameKey)) { cardClass = 'caught'; checkMark = '✓'; }
-    }
-
-    return `
-      <div class="poke-card ${cardClass} ${viewMode}" onclick="openDetail(${p.id})">
-        <div class="poke-card-num">#${String(displayNum).padStart(3, '0')}</div>
-        <div class="poke-card-name">${pokeName(p)}</div>
-        <div class="poke-card-types">${typesBadges}</div>
-        <div class="poke-card-check">${checkMark}</div>
-      </div>`;
-  }).join('');
 
   return `
     <div class="dex-sticky-top">
@@ -383,7 +288,7 @@ function renderDexView() {
         </div>
       </div>
     </div>
-    <div class="poke-grid ${viewMode}">${cards || '<div class="empty-state">No Pokémon found.</div>'}</div>
+    <div class="poke-grid ${viewMode}">${buildCards(dex)}</div>
     <div class="dex-bottom-bar">
       <button class="cc-btn" onclick="exportData()">📥 ${t('exportBtn')}</button>
       <button class="cc-btn" onclick="document.getElementById('import-file-dex').click()">📤 ${t('importBtn')}</button>
@@ -392,13 +297,107 @@ function renderDexView() {
     <div id="detail-modal" class="modal" style="display:none"></div>`;
 }
 
+// ===== Build Pokemon Cards (used by both full render and partial update) =====
+function buildCards(dex) {
+  let pokemon = POKEMON.filter(dex.filter);
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    pokemon = pokemon.filter(p =>
+      p.name.en.toLowerCase().includes(q) ||
+      p.name.de.toLowerCase().includes(q) ||
+      String(p.id).includes(q)
+    );
+  }
+
+  if (filterStatus === 'caught') {
+    if (currentDex === 'national' || currentDex === 'all') {
+      pokemon = pokemon.filter(p => isNationalChecked(p.id));
+    } else if (currentDex === 'go') {
+      pokemon = pokemon.filter(p => isChecked(p.id, 'go'));
+    } else {
+      pokemon = pokemon.filter(p => dex.gameKey && isChecked(p.id, dex.gameKey));
+    }
+  } else if (filterStatus === 'missing') {
+    if (currentDex === 'national' || currentDex === 'all') {
+      pokemon = pokemon.filter(p => !isNationalChecked(p.id));
+    } else if (currentDex === 'go') {
+      pokemon = pokemon.filter(p => !isChecked(p.id, 'go'));
+    } else {
+      pokemon = pokemon.filter(p => !(dex.gameKey && isChecked(p.id, dex.gameKey)));
+    }
+  }
+
+  if (filterType) pokemon = pokemon.filter(p => p.types.includes(filterType));
+  if (filterGen) pokemon = pokemon.filter(p => p.gen === parseInt(filterGen));
+
+  if (sortBy === 'name') {
+    pokemon.sort((a, b) => pokeName(a).localeCompare(pokeName(b)));
+  } else {
+    const dk = (currentDex === 'national' || currentDex === 'go' || currentDex === 'all') ? null : currentDex;
+    pokemon.sort((a, b) => {
+      const aNum = dk && a.dex[dk] ? a.dex[dk] : a.id;
+      const bNum = dk && b.dex[dk] ? b.dex[dk] : b.id;
+      return aNum - bNum;
+    });
+  }
+
+  if (pokemon.length === 0) return '<div class="empty-state">No Pokémon found.</div>';
+
+  const dexKey = (currentDex === 'national' || currentDex === 'go' || currentDex === 'all') ? null : currentDex;
+  return pokemon.map(p => {
+    const displayNum = dexKey && p.dex[dexKey] ? p.dex[dexKey] : p.id;
+    const typesBadges = p.types.map(type =>
+      `<span class="type-badge" style="background:${TYPE_COLORS[type]}">${typeName(type)}</span>`
+    ).join('');
+
+    let cardClass = '';
+    let checkMark = '';
+    if (currentDex === 'all') {
+      const dexStatus = getDexCaughtCount(p.id);
+      const natChecked = isNationalChecked(p.id);
+      if (dexStatus.total > 0 && dexStatus.count >= dexStatus.total) { cardClass = 'caught-full'; checkMark = '✓✓'; }
+      else if (natChecked || dexStatus.count > 0) { cardClass = 'caught-partial'; checkMark = '✓'; }
+    } else if (currentDex === 'national') {
+      if (isNationalChecked(p.id)) { cardClass = 'caught'; checkMark = '✓'; }
+    } else if (currentDex === 'go') {
+      if (isChecked(p.id, 'go')) { cardClass = 'caught'; checkMark = '✓'; }
+    } else {
+      if (dex.gameKey && isChecked(p.id, dex.gameKey)) { cardClass = 'caught'; checkMark = '✓'; }
+    }
+
+    return `
+      <div class="poke-card ${cardClass} ${viewMode}" onclick="openDetail(${p.id})">
+        <div class="poke-card-num">#${String(displayNum).padStart(3, '0')}</div>
+        <div class="poke-card-name">${pokeName(p)}</div>
+        <div class="poke-card-types">${typesBadges}</div>
+        <div class="poke-card-check">${checkMark}</div>
+      </div>`;
+  }).join('');
+}
+
 // ===== Filter/Sort Updates =====
-function updateSearch(val) { searchQuery = val; render(); }
-function updateFilterStatus(val) { filterStatus = val; render(); }
-function updateFilterType(val) { filterType = val; render(); }
-function updateFilterGen(val) { filterGen = val; render(); }
-function updateSort(val) { sortBy = val; render(); }
-function updateView(val) { viewMode = val; render(); }
+// renderList() only re-renders the pokemon grid + progress, keeping controls focused
+function renderList() {
+  if (currentView !== 'dex') return render();
+  const dex = DEXES[currentDex];
+  if (!dex) return;
+  const count = countDex(currentDex);
+  const progEl = document.querySelector('.dex-progress');
+  if (progEl) progEl.textContent = `${count.caught} / ${count.total}`;
+  const grid = document.querySelector('.poke-grid');
+  if (grid) {
+    grid.className = `poke-grid ${viewMode}`;
+    grid.innerHTML = buildCards(dex);
+  }
+}
+
+function updateSearch(val) { searchQuery = val; renderList(); }
+function updateFilterStatus(val) { filterStatus = val; renderList(); }
+function updateFilterType(val) { filterType = val; renderList(); }
+function updateFilterGen(val) { filterGen = val; renderList(); }
+function updateSort(val) { sortBy = val; renderList(); }
+function updateView(val) { viewMode = val; renderList(); }
 
 // ===== Wiki Links =====
 function wikiUrl(p) {
