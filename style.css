@@ -237,8 +237,9 @@ body {
 .detail-num { font-size: 0.9rem; color: var(--cc-text-secondary); }
 .detail-name { font-size: 1.5rem; font-weight: 800; margin: 4px 0 8px; }
 .wiki-link {
-  font-size: 0.7em; color: var(--cc-primary); text-decoration: none;
+  font-size: 0.85em; color: var(--cc-primary); text-decoration: none;
   vertical-align: super; opacity: 0.6; transition: opacity var(--cc-transition);
+  margin-left: 4px;
 }
 .wiki-link:hover { opacity: 1; }
 

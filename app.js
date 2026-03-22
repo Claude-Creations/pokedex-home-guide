@@ -423,7 +423,11 @@ function openDetail(pokeId) {
   const natDisabled = hasGame ? 'disabled' : '';
   const inNational = p.id <= NATIONAL_MAX;
 
-  // Game checkboxes — only show games where this Pokemon is available
+  // Determine which games to show based on current dex context
+  // Regional dex → only that dex's game. National/All → all games.
+  const showAllGames = currentDex === 'national' || currentDex === 'all';
+  const dexGameKey = DEXES[currentDex]?.gameKey; // e.g. 'lgpe' for kanto, 'sv' for paldea
+
   let gameChecks = '';
   for (const g of GAMES) {
     // Determine if pokemon is in this game's dex
@@ -434,6 +438,10 @@ function openDetail(pokeId) {
     else if (g === 'bdsp') inGame = p.dex.sinnoh !== null;
     else if (g === 'pla') inGame = p.dex.hisui !== null;
     else if (g === 'sv') inGame = p.dex.paldea !== null || p.dex.kitakami !== null || p.dex.blueberry !== null;
+
+    // In regional dex view, only show the relevant game
+    if (!showAllGames && g !== dexGameKey) continue;
+
     const checked = isChecked(p.id, g);
 
     // Obtainability info — show all methods (easiest first)
