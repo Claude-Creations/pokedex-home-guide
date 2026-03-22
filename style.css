@@ -248,6 +248,7 @@ body {
   font-size: 0.8rem; color: var(--cc-text-secondary); padding: 2px 0 2px 32px;
   line-height: 1.4;
 }
+.obtain-alt { opacity: 0.75; font-style: italic; }
 
 [data-theme="dark"] .obtain-info { color: var(--cc-text-secondary); }
 

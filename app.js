@@ -421,13 +421,23 @@ function openDetail(pokeId) {
     else if (g === 'sv') inGame = p.dex.paldea !== null || p.dex.kitakami !== null || p.dex.blueberry !== null;
     const checked = isChecked(p.id, g);
 
-    // Obtainability info
+    // Obtainability info — show all methods (easiest first)
     let obtainHtml = '';
     const obtainData = OBTAIN[p.id] && OBTAIN[p.id][g];
     if (obtainData && inGame) {
+      const METHOD_ICONS = { catch: '🌿', evolve: '🔄', starter: '⭐', static: '✨', breed: '🥚', gift: '🎁', raid: '⚔️', trade: '🔀' };
       const note = obtainData.n ? (obtainData.n[currentLang] || obtainData.n.en) : '';
-      const methodIcon = { catch: '🌿', evolve: '🔄', starter: '⭐', static: '✨', breed: '🥚', gift: '🎁', raid: '⚔️', trade: '🔀' }[obtainData.m] || '📌';
-      obtainHtml = `<div class="obtain-info">${methodIcon} ${note}</div>`;
+      const icon = METHOD_ICONS[obtainData.m] || '📌';
+      obtainHtml = `<div class="obtain-info">${icon} ${note}</div>`;
+      // If this is an evolution but also has a wild location, show the wild location too
+      // If this is a wild catch but also evolves from something, show evolution path too
+      if (obtainData.alt) {
+        for (const alt of obtainData.alt) {
+          const altNote = alt.n ? (alt.n[currentLang] || alt.n.en) : '';
+          const altIcon = METHOD_ICONS[alt.m] || '📌';
+          obtainHtml += `<div class="obtain-info obtain-alt">${altIcon} ${altNote}</div>`;
+        }
+      }
     }
 
     gameChecks += `
