@@ -134,10 +134,8 @@ body {
 /* ===== Dex View ===== */
 .dex-sticky-top {
   position: sticky; top: 60px; z-index: 50;
-  background: var(--cc-bg); padding-bottom: 8px;
-  margin: -28px -20px 0; padding: 12px 20px 8px;
-  border-bottom: 1px solid var(--cc-border);
-  box-shadow: var(--cc-shadow);
+  background: var(--cc-bg);
+  margin: -28px -20px 0; padding: 12px 20px 12px;
 }
 
 .dex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -187,8 +185,8 @@ body {
 .sort-btn.active, .view-btn.active { background: var(--cc-primary); color: white; border-color: var(--cc-primary); }
 
 /* ===== Pokemon Grid ===== */
-.poke-grid.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding-bottom: 60px; }
-.poke-grid.list { display: flex; flex-direction: column; gap: 4px; padding-bottom: 60px; }
+.poke-grid.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding-bottom: 60px; margin-top: 16px; }
+.poke-grid.list { display: flex; flex-direction: column; gap: 4px; padding-bottom: 60px; margin-top: 16px; }
 
 .poke-card {
   background: var(--cc-surface); border: 1px solid var(--cc-border); border-radius: var(--cc-radius-sm);
