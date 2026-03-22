@@ -417,13 +417,26 @@ function openDetail(pokeId) {
     else if (g === 'pla') inGame = p.dex.hisui !== null;
     else if (g === 'sv') inGame = p.dex.paldea !== null || p.dex.kitakami !== null || p.dex.blueberry !== null;
     const checked = isChecked(p.id, g);
+
+    // Obtainability info
+    let obtainHtml = '';
+    const obtainData = OBTAIN[p.id] && OBTAIN[p.id][g];
+    if (obtainData && inGame) {
+      const note = obtainData.n ? (obtainData.n[currentLang] || obtainData.n.en) : '';
+      const methodIcon = { catch: '🌿', evolve: '🔄', starter: '⭐', static: '✨', breed: '🥚', gift: '🎁', raid: '⚔️', trade: '🔀' }[obtainData.m] || '📌';
+      obtainHtml = `<div class="obtain-info">${methodIcon} ${note}</div>`;
+    }
+
     gameChecks += `
-      <label class="detail-game ${inGame ? '' : 'unavailable'}">
-        <input type="checkbox" ${checked ? 'checked' : ''} ${inGame ? '' : 'disabled'}
-          onchange="event.stopPropagation(); toggleCheck(${p.id}, '${g}')">
-        <span>${gameName(g)}</span>
-        ${!inGame ? `<span class="unavail-hint">(${t('detailNotAvailable')})</span>` : ''}
-      </label>`;
+      <div class="detail-game-row ${inGame ? '' : 'unavailable'}">
+        <label class="detail-game">
+          <input type="checkbox" ${checked ? 'checked' : ''} ${inGame ? '' : 'disabled'}
+            onchange="event.stopPropagation(); toggleCheck(${p.id}, '${g}')">
+          <span>${gameName(g)}</span>
+          ${!inGame ? `<span class="unavail-hint">(${t('detailNotAvailable')})</span>` : ''}
+        </label>
+        ${obtainHtml}
+      </div>`;
   }
 
   const modal = document.getElementById('detail-modal');

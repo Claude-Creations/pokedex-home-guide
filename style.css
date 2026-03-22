@@ -238,6 +238,17 @@ body {
 .detail-game span { font-size: 0.9rem; }
 .unavail-hint { font-size: 0.75rem; color: var(--cc-text-secondary); }
 
+.detail-game-row { margin-bottom: 6px; border-bottom: 1px solid var(--cc-border); padding-bottom: 6px; }
+.detail-game-row:last-child { border-bottom: none; }
+.detail-game-row.unavailable { opacity: 0.4; }
+
+.obtain-info {
+  font-size: 0.8rem; color: var(--cc-text-secondary); padding: 2px 0 2px 32px;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .obtain-info { color: var(--cc-text-secondary); }
+
 /* ===== Footer ===== */
 .cc-footer { text-align: center; padding: 24px 20px; color: var(--cc-text-secondary); font-size: 0.8rem; border-top: 1px solid var(--cc-border); margin-top: 40px; }
 .cc-footer a { color: var(--cc-primary); text-decoration: none; }
