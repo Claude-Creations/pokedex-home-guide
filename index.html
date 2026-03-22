@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track your Living Dex progress across all Pokémon games compatible with Pokémon Home.">
+  <title>Pokédex Home Guide</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="cc-header">
+    <div class="cc-header-left">
+      <a href="https://claude-creations.github.io">
+        <span class="cc-logo">Claude Creations</span>
+      </a>
+      <span class="cc-header-sub">Pokédex Home Guide</span>
+    </div>
+    <div class="cc-header-controls">
+      <button class="cc-theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <div class="cc-lang-switcher">
+        <button class="cc-lang-btn" data-lang="en" onclick="setLanguage('en')" title="English">🇬🇧</button>
+        <button class="cc-lang-btn" data-lang="de" onclick="setLanguage('de')" title="Deutsch">🇩🇪</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="cc-main">
+    <div id="app"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="cc-footer">
+    <span>A Claude Creations project.</span>
+    <a href="https://claude-creations.github.io">Home</a>
+  </footer>
+
+  <!-- Data -->
+  <script src="data/pokemon.js"></script>
+  <script src="data/obtain.js"></script>
+  <script src="data/guides.js"></script>
+  <!-- App -->
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
