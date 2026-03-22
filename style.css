@@ -135,7 +135,7 @@ body {
 .dex-sticky-top {
   position: sticky; top: 60px; z-index: 50;
   background: var(--cc-bg);
-  margin: -28px -20px 0; padding: 12px 20px 12px;
+  margin: -28px -20px 0; padding: 12px 20px 8px;
 }
 
 .dex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -185,8 +185,8 @@ body {
 .sort-btn.active, .view-btn.active { background: var(--cc-primary); color: white; border-color: var(--cc-primary); }
 
 /* ===== Pokemon Grid ===== */
-.poke-grid.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding-bottom: 60px; margin-top: 16px; }
-.poke-grid.list { display: flex; flex-direction: column; gap: 4px; padding-bottom: 60px; margin-top: 16px; }
+.poke-grid.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding-bottom: 60px; margin-top: 8px; }
+.poke-grid.list { display: flex; flex-direction: column; gap: 4px; padding-bottom: 60px; margin-top: 8px; }
 
 .poke-card {
   background: var(--cc-surface); border: 1px solid var(--cc-border); border-radius: var(--cc-radius-sm);
@@ -312,6 +312,7 @@ body {
   .poke-grid.grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
   .dex-filters { gap: 4px; }
   .dex-sticky-top { margin: -16px -10px 0; padding: 8px 10px 6px; }
+  .poke-grid.grid, .poke-grid.list { margin-top: 6px; }
   .dex-bottom-bar { bottom: 12px; padding: 6px 12px; }
   .dash-actions { flex-direction: column; align-items: stretch; }
   .modal-content { padding: 20px; }
