@@ -42,7 +42,7 @@ const DEXES = {
 };
 
 // Game keys for tracker checkboxes
-const GAMES = ['lgpe', 'swsh', 'bdsp', 'pla', 'sv', 'go', 'other'];
+const GAMES = ['lgpe', 'swsh', 'bdsp', 'pla', 'sv', 'go'];
 
 // Type colors for badges
 const TYPE_COLORS = {

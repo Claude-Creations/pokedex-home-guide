@@ -416,8 +416,6 @@ function openDetail(pokeId) {
     else if (g === 'bdsp') inGame = p.dex.sinnoh !== null;
     else if (g === 'pla') inGame = p.dex.hisui !== null;
     else if (g === 'sv') inGame = p.dex.paldea !== null || p.dex.kitakami !== null || p.dex.blueberry !== null;
-    else if (g === 'other') inGame = true; // "Other" source — always available
-
     const checked = isChecked(p.id, g);
     gameChecks += `
       <label class="detail-game ${inGame ? '' : 'unavailable'}">

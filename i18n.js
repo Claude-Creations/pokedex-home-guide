@@ -31,7 +31,6 @@ const T = {
     gamePla: 'Legends: Arceus',
     gameSv: 'Scarlet / Violet',
     gameGo: 'Pokémon GO',
-    gameOther: 'Other',
     // Search & Filter
     searchPlaceholder: 'Search by name or number...',
     filterAll: 'All',
@@ -94,7 +93,6 @@ const T = {
     gamePla: 'Legenden: Arceus',
     gameSv: 'Karmesin / Purpur',
     gameGo: 'Pokémon GO',
-    gameOther: 'Sonstige',
     searchPlaceholder: 'Name oder Nummer suchen...',
     filterAll: 'Alle',
     filterCaught: 'Gefangen',
@@ -138,5 +136,5 @@ const TYPE_NAMES = {
 // Game name translation keys
 const GAME_NAMES = {
   lgpe: 'gameLgpe', swsh: 'gameSwsh', bdsp: 'gameBdsp',
-  pla: 'gamePla', sv: 'gameSv', go: 'gameGo', other: 'gameOther',
+  pla: 'gamePla', sv: 'gameSv', go: 'gameGo',
 };
