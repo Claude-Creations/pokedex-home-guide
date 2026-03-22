@@ -179,6 +179,10 @@ body {
 .poke-card:hover { box-shadow: var(--cc-shadow-md); border-color: var(--cc-primary-light); }
 .poke-card.caught { border-left: 4px solid var(--cc-success); }
 .poke-card.caught .poke-card-check { color: var(--cc-success); }
+.poke-card.caught-partial { border-left: 4px solid var(--cc-warning); }
+.poke-card.caught-partial .poke-card-check { color: var(--cc-warning); }
+.poke-card.caught-full { border-left: 4px solid var(--cc-success); background: var(--cc-success-bg); }
+.poke-card.caught-full .poke-card-check { color: var(--cc-success); font-weight: 900; }
 
 .poke-card.grid .poke-card-num { font-size: 0.75rem; color: var(--cc-text-secondary); margin-bottom: 2px; }
 .poke-card.grid .poke-card-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }

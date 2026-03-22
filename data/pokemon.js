@@ -27,6 +27,7 @@ const POKEMON = [
 
 // Dex definitions
 const DEXES = {
+  all:       { nameKey: 'dexAll',       icon: '📋', gameKey: null,   total: POKEMON.length, filter: () => true },
   national:  { nameKey: 'dexNational',  icon: '🌍', gameKey: null,   total: 999,  filter: p => p.id <= 999 },
   kanto:     { nameKey: 'dexKanto',     icon: '🔴', gameKey: 'lgpe', total: 150,  filter: p => p.dex.kanto !== null },
   sinnoh:    { nameKey: 'dexSinnoh',    icon: '💎', gameKey: 'bdsp', total: 150,  filter: p => p.dex.sinnoh !== null },
@@ -41,7 +42,7 @@ const DEXES = {
 };
 
 // Game keys for tracker checkboxes
-const GAMES = ['lgpe', 'swsh', 'bdsp', 'pla', 'sv', 'go', 'bank'];
+const GAMES = ['lgpe', 'swsh', 'bdsp', 'pla', 'sv', 'go', 'other'];
 
 // Type colors for badges
 const TYPE_COLORS = {

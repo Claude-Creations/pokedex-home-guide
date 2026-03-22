@@ -125,22 +125,35 @@ function toggleNational(pokeId) {
 // ===== Counting =====
 function countDex(dexKey) {
   const dex = DEXES[dexKey];
-  if (!dex) return { caught: 0, total: dex ? dex.total : 0 };
+  if (!dex) return { caught: 0, total: 0 };
   const filtered = POKEMON.filter(dex.filter);
   let caught = 0;
   for (const p of filtered) {
-    if (dexKey === 'national') {
+    if (dexKey === 'national' || dexKey === 'all') {
       if (isNationalChecked(p.id)) caught++;
     } else if (dexKey === 'go') {
       if (isChecked(p.id, 'go')) caught++;
     } else {
-      // For regional dex, check if the corresponding game is checked
       const gameKey = dex.gameKey;
       if (gameKey && isChecked(p.id, gameKey)) caught++;
-      else if (isNationalChecked(p.id)) caught++; // also count if national is checked
     }
   }
   return { caught, total: filtered.length };
+}
+
+// How many dexes has this Pokemon been checked in?
+function getDexCaughtCount(pokeId) {
+  let count = 0;
+  let total = 0;
+  for (const [key, dex] of Object.entries(DEXES)) {
+    if (key === 'all' || key === 'national') continue;
+    const p = POKEMON.find(pk => pk.id === pokeId);
+    if (!p) continue;
+    if (!dex.filter(p)) continue;
+    total++;
+    if (dex.gameKey && isChecked(pokeId, dex.gameKey)) count++;
+  }
+  return { count, total };
 }
 
 // ===== Navigation =====
@@ -240,9 +253,21 @@ function renderDexView() {
 
   // Filter by status
   if (filterStatus === 'caught') {
-    pokemon = pokemon.filter(p => currentDex === 'national' ? isNationalChecked(p.id) : isChecked(p.id, dex.gameKey || 'go') || isNationalChecked(p.id));
+    if (currentDex === 'national' || currentDex === 'all') {
+      pokemon = pokemon.filter(p => isNationalChecked(p.id));
+    } else if (currentDex === 'go') {
+      pokemon = pokemon.filter(p => isChecked(p.id, 'go'));
+    } else {
+      pokemon = pokemon.filter(p => dex.gameKey && isChecked(p.id, dex.gameKey));
+    }
   } else if (filterStatus === 'missing') {
-    pokemon = pokemon.filter(p => currentDex === 'national' ? !isNationalChecked(p.id) : !(isChecked(p.id, dex.gameKey || 'go') || isNationalChecked(p.id)));
+    if (currentDex === 'national' || currentDex === 'all') {
+      pokemon = pokemon.filter(p => !isNationalChecked(p.id));
+    } else if (currentDex === 'go') {
+      pokemon = pokemon.filter(p => !isChecked(p.id, 'go'));
+    } else {
+      pokemon = pokemon.filter(p => !(dex.gameKey && isChecked(p.id, dex.gameKey)));
+    }
   }
 
   // Filter by type
@@ -292,20 +317,42 @@ function renderDexView() {
   const count = countDex(currentDex);
 
   // Pokemon cards
-  const dexKey = currentDex === 'national' || currentDex === 'go' ? null : currentDex;
+  const dexKey = (currentDex === 'national' || currentDex === 'go' || currentDex === 'all') ? null : currentDex;
   const cards = pokemon.map(p => {
-    const isCaught = currentDex === 'national' ? isNationalChecked(p.id) : (dex.gameKey ? isChecked(p.id, dex.gameKey) : isChecked(p.id, 'go')) || isNationalChecked(p.id);
     const displayNum = dexKey && p.dex[dexKey] ? p.dex[dexKey] : p.id;
     const typesBadges = p.types.map(type =>
       `<span class="type-badge" style="background:${TYPE_COLORS[type]}">${typeName(type)}</span>`
     ).join('');
 
+    // Caught status depends on view
+    let cardClass = '';
+    let checkMark = '';
+    if (currentDex === 'all') {
+      // "All" view: 3 states — not caught, partially caught (some dexes), fully caught (all dexes)
+      const dexStatus = getDexCaughtCount(p.id);
+      const natChecked = isNationalChecked(p.id);
+      if (dexStatus.total > 0 && dexStatus.count >= dexStatus.total) {
+        cardClass = 'caught-full';
+        checkMark = '✓✓';
+      } else if (natChecked || dexStatus.count > 0) {
+        cardClass = 'caught-partial';
+        checkMark = '✓';
+      }
+    } else if (currentDex === 'national') {
+      if (isNationalChecked(p.id)) { cardClass = 'caught'; checkMark = '✓'; }
+    } else if (currentDex === 'go') {
+      if (isChecked(p.id, 'go')) { cardClass = 'caught'; checkMark = '✓'; }
+    } else {
+      // Regional dex: caught in THIS specific game only
+      if (dex.gameKey && isChecked(p.id, dex.gameKey)) { cardClass = 'caught'; checkMark = '✓'; }
+    }
+
     return `
-      <div class="poke-card ${isCaught ? 'caught' : ''} ${viewMode}" onclick="openDetail(${p.id})">
+      <div class="poke-card ${cardClass} ${viewMode}" onclick="openDetail(${p.id})">
         <div class="poke-card-num">#${String(displayNum).padStart(3, '0')}</div>
         <div class="poke-card-name">${pokeName(p)}</div>
         <div class="poke-card-types">${typesBadges}</div>
-        <div class="poke-card-check">${isCaught ? '✓' : ''}</div>
+        <div class="poke-card-check">${checkMark}</div>
       </div>`;
   }).join('');
 
@@ -369,7 +416,7 @@ function openDetail(pokeId) {
     else if (g === 'bdsp') inGame = p.dex.sinnoh !== null;
     else if (g === 'pla') inGame = p.dex.hisui !== null;
     else if (g === 'sv') inGame = p.dex.paldea !== null || p.dex.kitakami !== null || p.dex.blueberry !== null;
-    else if (g === 'bank') inGame = true; // Bank can transfer anything
+    else if (g === 'other') inGame = true; // "Other" source — always available
 
     const checked = isChecked(p.id, g);
     gameChecks += `

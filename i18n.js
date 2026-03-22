@@ -12,6 +12,7 @@ const T = {
     dashTitle: 'Overview',
     dashTotal: 'Total Progress',
     // Dex names
+    dexAll: 'All Pokémon',
     dexNational: 'National Dex',
     dexKanto: 'Kanto',
     dexSinnoh: 'Sinnoh',
@@ -30,7 +31,7 @@ const T = {
     gamePla: 'Legends: Arceus',
     gameSv: 'Scarlet / Violet',
     gameGo: 'Pokémon GO',
-    gameBank: 'Pokémon Bank',
+    gameOther: 'Other',
     // Search & Filter
     searchPlaceholder: 'Search by name or number...',
     filterAll: 'All',
@@ -75,6 +76,7 @@ const T = {
     navGuides: 'Guides',
     dashTitle: 'Übersicht',
     dashTotal: 'Gesamtfortschritt',
+    dexAll: 'Alle Pokémon',
     dexNational: 'National-Dex',
     dexKanto: 'Kanto',
     dexSinnoh: 'Sinnoh',
@@ -92,7 +94,7 @@ const T = {
     gamePla: 'Legenden: Arceus',
     gameSv: 'Karmesin / Purpur',
     gameGo: 'Pokémon GO',
-    gameBank: 'Pokémon Bank',
+    gameOther: 'Sonstige',
     searchPlaceholder: 'Name oder Nummer suchen...',
     filterAll: 'Alle',
     filterCaught: 'Gefangen',
@@ -136,5 +138,5 @@ const TYPE_NAMES = {
 // Game name translation keys
 const GAME_NAMES = {
   lgpe: 'gameLgpe', swsh: 'gameSwsh', bdsp: 'gameBdsp',
-  pla: 'gamePla', sv: 'gameSv', go: 'gameGo', bank: 'gameBank',
+  pla: 'gamePla', sv: 'gameSv', go: 'gameGo', other: 'gameOther',
 };
