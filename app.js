@@ -400,6 +400,14 @@ function updateFilterGen(val) { filterGen = val; render(); }
 function updateSort(val) { sortBy = val; render(); }
 function updateView(val) { viewMode = val; render(); }
 
+// ===== Wiki Links =====
+function wikiUrl(p) {
+  if (currentLang === 'de') {
+    return 'https://www.pokewiki.de/' + encodeURIComponent(p.name.de);
+  }
+  return 'https://bulbapedia.bulbagarden.net/wiki/' + encodeURIComponent(p.name.en) + '_(Pok%C3%A9mon)';
+}
+
 // ===== Detail Modal =====
 function openDetail(pokeId) {
   const p = POKEMON.find(pk => pk.id === pokeId);
@@ -468,7 +476,7 @@ function openDetail(pokeId) {
       <button class="modal-close" onclick="closeDetail()">✕</button>
       <div class="detail-header">
         <span class="detail-num">#${String(p.id).padStart(3, '0')}</span>
-        <h2 class="detail-name">${pokeName(p)}</h2>
+        <h2 class="detail-name">${pokeName(p)} <a href="${wikiUrl(p)}" target="_blank" rel="noopener" class="wiki-link" title="${currentLang === 'de' ? 'PokéWiki' : 'Bulbapedia'}">↗</a></h2>
         <div class="detail-types">${typesBadges}</div>
       </div>
       ${inNational ? `
