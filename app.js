@@ -2,6 +2,7 @@
 const LANG_KEY = 'cc-language';
 const THEME_KEY = 'cc-theme';
 const TRACKER_KEY = 'pdh-tracker';
+const FORMS_KEY = 'pdh-forms';
 const NATIONAL_MAX = 999;
 
 // ===== State =====
@@ -10,6 +11,7 @@ let currentTheme = 'light';
 let currentView = 'dashboard'; // dashboard | dex | guides
 let currentDex = 'national';
 let tracker = {}; // { "1": { national: true, sv: true, ... }, ... }
+let forms = {};   // { "50-alolan": true, "50-normal": true, ... }
 let searchQuery = '';
 let filterStatus = 'all'; // all | caught | missing
 let filterType = '';
@@ -80,14 +82,38 @@ function loadTracker() {
     const saved = localStorage.getItem(TRACKER_KEY);
     if (saved) tracker = JSON.parse(saved);
   } catch (e) { tracker = {}; }
+  try {
+    const saved = localStorage.getItem(FORMS_KEY);
+    if (saved) forms = JSON.parse(saved);
+  } catch (e) { forms = {}; }
 }
 
 function saveTracker() {
   localStorage.setItem(TRACKER_KEY, JSON.stringify(tracker));
+  localStorage.setItem(FORMS_KEY, JSON.stringify(forms));
 }
 
 function isChecked(pokeId, game) {
   return tracker[pokeId] && tracker[pokeId][game] === true;
+}
+
+// Check if a Pokemon has the required form for a specific dex
+function hasRequiredForm(pokeId, dexKey) {
+  const req = FORM_REQUIREMENTS[dexKey];
+  if (!req || !req[pokeId]) return true; // No form requirement = any form counts
+  const requiredForm = req[pokeId];
+  return forms[`${pokeId}-${requiredForm}`] === true;
+}
+
+// Check if Pokemon counts as caught for a specific dex
+function isDexCaught(pokeId, dexKey) {
+  const dex = DEXES[dexKey];
+  if (!dex) return false;
+  if (dexKey === 'all' || dexKey === 'national') return isNationalChecked(pokeId);
+  if (dexKey === 'go') return isChecked(pokeId, 'go');
+  // For regional dexes: game must be checked AND form requirement met
+  if (!dex.gameKey || !isChecked(pokeId, dex.gameKey)) return false;
+  return hasRequiredForm(pokeId, dexKey);
 }
 
 function isNationalChecked(pokeId) {
@@ -97,6 +123,18 @@ function isNationalChecked(pokeId) {
     if (tracker[pokeId][g] === true) return true;
   }
   return tracker[pokeId].national === true;
+}
+
+function isFormOwned(pokeId, form) {
+  return forms[`${pokeId}-${form}`] === true;
+}
+
+function toggleForm(pokeId, form) {
+  const key = `${pokeId}-${form}`;
+  forms[key] = !forms[key];
+  saveTracker();
+  // Re-render detail
+  openDetail(pokeId);
 }
 
 function hasAnyGameChecked(pokeId) {
@@ -129,14 +167,7 @@ function countDex(dexKey) {
   const filtered = POKEMON.filter(dex.filter);
   let caught = 0;
   for (const p of filtered) {
-    if (dexKey === 'national' || dexKey === 'all') {
-      if (isNationalChecked(p.id)) caught++;
-    } else if (dexKey === 'go') {
-      if (isChecked(p.id, 'go')) caught++;
-    } else {
-      const gameKey = dex.gameKey;
-      if (gameKey && isChecked(p.id, gameKey)) caught++;
-    }
+    if (isDexCaught(p.id, dexKey)) caught++;
   }
   return { caught, total: filtered.length };
 }
@@ -151,7 +182,7 @@ function getDexCaughtCount(pokeId) {
     if (!p) continue;
     if (!dex.filter(p)) continue;
     total++;
-    if (dex.gameKey && isChecked(pokeId, dex.gameKey)) count++;
+    if (isDexCaught(pokeId, key)) count++;
   }
   return { count, total };
 }
@@ -358,12 +389,8 @@ function buildCards(dex) {
       const natChecked = isNationalChecked(p.id);
       if (dexStatus.total > 0 && dexStatus.count >= dexStatus.total) { cardClass = 'caught-full'; checkMark = '✓✓'; }
       else if (natChecked || dexStatus.count > 0) { cardClass = 'caught-partial'; checkMark = '✓'; }
-    } else if (currentDex === 'national') {
-      if (isNationalChecked(p.id)) { cardClass = 'caught'; checkMark = '✓'; }
-    } else if (currentDex === 'go') {
-      if (isChecked(p.id, 'go')) { cardClass = 'caught'; checkMark = '✓'; }
     } else {
-      if (dex.gameKey && isChecked(p.id, dex.gameKey)) { cardClass = 'caught'; checkMark = '✓'; }
+      if (isDexCaught(p.id, currentDex)) { cardClass = 'caught'; checkMark = '✓'; }
     }
 
     return `
@@ -495,12 +522,52 @@ function openDetail(pokeId) {
           ${hasGame ? '<span class="auto-hint">(auto)</span>' : ''}
         </label>
       </div>` : ''}
+      ${renderFormSection(p)}
       <div class="detail-games">
         <h3>${t('detailObtainedIn')}</h3>
         ${gameChecks}
       </div>
     </div>`;
   modal.style.display = 'flex';
+}
+
+function formDisplayName(form) {
+  const key = 'form' + form.charAt(0).toUpperCase() + form.slice(1);
+  return t(key) || form;
+}
+
+function renderFormSection(p) {
+  const pf = POKEMON_FORMS[p.id];
+  if (!pf) return ''; // No regional forms
+
+  // Show which form is required for current dex
+  let reqNote = '';
+  const req = FORM_REQUIREMENTS[currentDex];
+  if (req && req[p.id]) {
+    const reqForm = req[p.id];
+    const owned = isFormOwned(p.id, reqForm);
+    reqNote = `<div class="form-required ${owned ? 'owned' : 'missing'}">
+      ⚠️ ${t('formRequired')} <strong>${formDisplayName(reqForm)}</strong>
+      ${owned ? '✓' : '✗'}
+    </div>`;
+  }
+
+  const formChecks = pf.forms.map(form => {
+    const owned = isFormOwned(p.id, form);
+    return `<label class="form-check ${owned ? 'owned' : ''}">
+      <input type="checkbox" ${owned ? 'checked' : ''}
+        onchange="event.stopPropagation(); toggleForm(${p.id}, '${form}')">
+      <span>${formDisplayName(form)}</span>
+    </label>`;
+  }).join('');
+
+  return `<div class="detail-forms">
+    ${reqNote}
+    <div class="form-checks">
+      <span class="form-label">${t('formOwned')}</span>
+      ${formChecks}
+    </div>
+  </div>`;
 }
 
 function closeDetail() {
@@ -547,9 +614,10 @@ function renderGuides() {
 // ===== Export/Import =====
 function exportData() {
   const data = {
-    version: 1,
+    version: 2,
     exportDate: new Date().toISOString(),
-    tracker: tracker
+    tracker: tracker,
+    forms: forms
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -571,6 +639,7 @@ function importData(input) {
       const data = JSON.parse(e.target.result);
       if (data.tracker) {
         tracker = data.tracker;
+        if (data.forms) forms = data.forms;
         saveTracker();
         render();
         alert(t('importSuccess'));

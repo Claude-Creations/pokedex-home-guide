@@ -62,6 +62,11 @@ const T = {
     typeGround: 'Ground', typeFlying: 'Flying', typePsychic: 'Psychic', typeBug: 'Bug',
     typeRock: 'Rock', typeGhost: 'Ghost', typeDragon: 'Dragon', typeDark: 'Dark',
     typeSteel: 'Steel', typeFairy: 'Fairy',
+    // Forms
+    formNormal: 'Normal', formAlolan: 'Alolan', formGalarian: 'Galarian',
+    formHisuian: 'Hisuian', formPaldean: 'Paldean',
+    formRequired: 'Required form for this dex:',
+    formOwned: 'Forms owned:',
     // Footer
     footerText: 'A Claude Creations project.',
     footerHome: 'Home',
@@ -119,6 +124,10 @@ const T = {
     typeGround: 'Boden', typeFlying: 'Flug', typePsychic: 'Psycho', typeBug: 'Käfer',
     typeRock: 'Gestein', typeGhost: 'Geist', typeDragon: 'Drache', typeDark: 'Unlicht',
     typeSteel: 'Stahl', typeFairy: 'Fee',
+    formNormal: 'Normal', formAlolan: 'Alola', formGalarian: 'Galar',
+    formHisuian: 'Hisui', formPaldean: 'Paldea',
+    formRequired: 'Benötigte Form für diesen Dex:',
+    formOwned: 'Formen im Besitz:',
     footerText: 'Ein Claude Creations Projekt.',
     footerHome: 'Startseite',
   }

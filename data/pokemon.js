@@ -1052,6 +1052,102 @@ const DEXES = {
 // Game keys for tracker checkboxes
 const GAMES = ['lgpe', 'swsh', 'bdsp', 'pla', 'sv', 'go'];
 
+// ===== Regional Form Requirements =====
+// Which dex requires which form for which Pokemon (by national dex ID)
+// If a Pokemon is listed here for a dex, only that specific form counts for completion
+const FORM_REQUIREMENTS = {
+  blueberry: {
+    27:'alolan', 28:'alolan',       // Sandshrew, Sandslash
+    37:'alolan', 38:'alolan',       // Vulpix, Ninetales
+    50:'alolan', 51:'alolan',       // Diglett, Dugtrio
+    74:'alolan', 75:'alolan', 76:'alolan', // Geodude line
+    79:'galarian', 80:'galarian', 199:'galarian', // Slowpoke line
+    88:'alolan', 89:'alolan',       // Grimer, Muk
+    103:'alolan',                   // Exeggutor
+    211:'hisuian',                  // Qwilfish
+  },
+  galar: {
+    52:'galarian',                  // Meowth
+    77:'galarian', 78:'galarian',   // Ponyta, Rapidash
+    79:'galarian', 80:'galarian',   // Slowpoke, Slowbro
+    83:'galarian',                  // Farfetch'd
+    110:'galarian',                 // Weezing
+    122:'galarian',                 // Mr. Mime
+    199:'galarian',                 // Slowking
+    222:'galarian',                 // Corsola
+    263:'galarian', 264:'galarian', // Zigzagoon, Linoone
+    554:'galarian', 555:'galarian', // Darumaka, Darmanitan
+    562:'galarian',                 // Yamask
+    618:'galarian',                 // Stunfisk
+  },
+  armor: {
+    79:'galarian', 80:'galarian',   // Slowpoke, Slowbro
+    199:'galarian',                 // Slowking
+  },
+  crown: {
+    144:'galarian', 145:'galarian', 146:'galarian', // Legendary birds
+  },
+  hisui: {
+    58:'hisuian', 59:'hisuian',     // Growlithe, Arcanine
+    100:'hisuian', 101:'hisuian',   // Voltorb, Electrode
+    157:'hisuian',                  // Typhlosion
+    211:'hisuian',                  // Qwilfish
+    215:'hisuian',                  // Sneasel
+    503:'hisuian',                  // Samurott
+    549:'hisuian',                  // Lilligant
+    570:'hisuian', 571:'hisuian',   // Zorua, Zoroark
+    628:'hisuian',                  // Braviary
+    705:'hisuian', 706:'hisuian',   // Sliggoo, Goodra
+    713:'hisuian',                  // Avalugg
+    724:'hisuian',                  // Decidueye
+  },
+  paldea: {
+    128:'paldean',                  // Tauros (Combat/Blaze/Aqua)
+    194:'paldean',                  // Wooper
+  },
+};
+
+// Which forms exist for each Pokemon (only for those with regional variants)
+const POKEMON_FORMS = {
+  19:{forms:['normal','alolan']},  20:{forms:['normal','alolan']},
+  26:{forms:['normal','alolan']},
+  27:{forms:['normal','alolan']},  28:{forms:['normal','alolan']},
+  37:{forms:['normal','alolan']},  38:{forms:['normal','alolan']},
+  50:{forms:['normal','alolan']},  51:{forms:['normal','alolan']},
+  52:{forms:['normal','alolan','galarian']},
+  53:{forms:['normal','alolan']},
+  58:{forms:['normal','hisuian']}, 59:{forms:['normal','hisuian']},
+  74:{forms:['normal','alolan']},  75:{forms:['normal','alolan']},  76:{forms:['normal','alolan']},
+  77:{forms:['normal','galarian']}, 78:{forms:['normal','galarian']},
+  79:{forms:['normal','galarian']}, 80:{forms:['normal','galarian']},
+  83:{forms:['normal','galarian']},
+  88:{forms:['normal','alolan']},  89:{forms:['normal','alolan']},
+  100:{forms:['normal','hisuian']}, 101:{forms:['normal','hisuian']},
+  103:{forms:['normal','alolan']},
+  105:{forms:['normal','alolan']},
+  110:{forms:['normal','galarian']},
+  122:{forms:['normal','galarian']},
+  128:{forms:['normal','paldean']},
+  144:{forms:['normal','galarian']}, 145:{forms:['normal','galarian']}, 146:{forms:['normal','galarian']},
+  157:{forms:['normal','hisuian']},
+  194:{forms:['normal','paldean']},
+  199:{forms:['normal','galarian']},
+  211:{forms:['normal','hisuian']},
+  215:{forms:['normal','hisuian']},
+  222:{forms:['normal','galarian']},
+  263:{forms:['normal','galarian']}, 264:{forms:['normal','galarian']},
+  503:{forms:['normal','hisuian']},
+  549:{forms:['normal','hisuian']},
+  554:{forms:['normal','galarian']}, 555:{forms:['normal','galarian']},
+  562:{forms:['normal','galarian']},
+  570:{forms:['normal','hisuian']}, 571:{forms:['normal','hisuian']},
+  618:{forms:['normal','galarian']},
+  628:{forms:['normal','hisuian']},
+  705:{forms:['normal','hisuian']}, 706:{forms:['normal','hisuian']},
+  713:{forms:['normal','hisuian']},
+  724:{forms:['normal','hisuian']},
+};
+
 // Type colors for badges
 const TYPE_COLORS = {
   normal:   '#A8A77A', fire:     '#EE8130', water:    '#6390F0', electric: '#F7D02C',
